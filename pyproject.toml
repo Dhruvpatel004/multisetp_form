@@ -12,3 +12,14 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "twilio>=9.6.2",
 ]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "multisetp-form",
+    "pylint>=3.3.7",
+]
+
+[tool.uv.sources]
+multisetp-form = { workspace = true }
