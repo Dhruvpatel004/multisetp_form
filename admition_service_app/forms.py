@@ -94,13 +94,21 @@ class EngineeringScoresForm(forms.ModelForm):
         model = AdmissionApplication
         fields = ["jee_main_score", "math_score", "physics_score", "chemistry_score"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].required = True
+
 
 # Step 4b: Pharmacy Entrance Exam Scores Form
 class PharmacyScoresForm(forms.ModelForm):
     class Meta:
         model = AdmissionApplication
         fields = ["neet_score", "biology_score", "physics_score", "chemistry_score"]
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].required = True
 
 # Step 5: Summary Form
 class ConfirmationForm(forms.Form):

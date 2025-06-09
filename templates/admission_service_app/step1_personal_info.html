@@ -1,46 +1,165 @@
 {% extends 'base.html' %}
+{% load form_filters %}
 {% load crispy_forms_tags %}
-{% block title %}Step 1 - Personal Info{% endblock %}
+{% block title %}Step 1 - Personal Information{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
-        <div class="card p-4 shadow-sm">
-            <h4 class="mb-3 text-center">Step 1: Personal Information</h4>
+        <!-- Step Indicator -->
+        <div class="text-center mb-4">
+            <div class="step-indicator d-inline-flex align-items-center">
+                <i class="bi bi-person-circle me-2 text-primary"></i>
+                <small class="text-muted">Step 1 of 5</small>
+            </div>
+        </div>
+
+        <div class="form-card card p-5 shadow-lg">
+            <!-- Progress Bar -->
+            <div class="progress mb-4" style="height: 8px;">
+                <div class="progress-bar" role="progressbar" style="width: 20%"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-gradient rounded-circle mb-3" style="width: 60px; height: 60px;">
+                    <i class="bi bi-person-fill text-white fs-4"></i>
+                </div>
+                <h4 class="step-title mb-2">Personal Information</h4>
+                <p class="text-muted">Let's start with your basic information</p>
+            </div>
+
             <form method="post" novalidate>
                 {% csrf_token %}
                 {{ wizard.management_form }}
-                {{ form|crispy }}
 
-                <div class="d-flex justify-content-between mt-4">
+                <div class="row g-3">
+                    {% for field in form %}
+                        {% if field.name == 'otp' and not show_otp %}
+                            <!-- Hide OTP field when not needed -->
+                        {% else %}
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    {{ field|add_class:"form-control" }}
+                                    <label for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                        {% if field.field.required %}
+                                            <span class="text-danger">*</span>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% if field.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ field.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- OTP Alerts -->
+                {% if show_otp and not otp_verified %}
+                    <div class="alert alert-info mt-4 border-0" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <div>
+                                <strong>OTP Verification Required</strong>
+                                <p class="mb-0">Please check your mobile for the verification code and enter it above.</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if otp_verified %}
+                    <div class="alert alert-success mt-4 border-0" role="alert">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <strong>Mobile number verified successfully!</strong>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div class="row mt-5">
                     {% if show_otp and not otp_verified %}
-                        <!-- OTP field is already included via crispy form -->
-                        <button type="submit" name="verify_and_continue" class="btn btn-success">
-                            Verify OTP & Continue
-                        </button>
+                        <div class="col-12">
+                            <button type="submit" name="verify_and_continue" class="btn btn-success btn-lg w-100">
+                                <i class="bi bi-shield-check me-2"></i>
+                                Verify OTP & Continue
+                            </button>
+                        </div>
                     {% else %}
-
                         {% if not otp_verified %}
-                        <button type="submit" name="send_otp" class="btn btn-warning">
-                            Send OTP
-                        </button>
-                        
+                            <div class="col-md-6 mb-3">
+                                <button type="submit" name="send_otp" class="btn btn-warning btn-lg w-100">
+                                    <i class="bi bi-phone me-2"></i>
+                                    Send OTP
+                                </button>
+                            </div>
                         {% endif %}
+
+                        <div class="{% if not otp_verified %}col-md-6{% else %}col-12{% endif %}">
+                            <button
+                                type="submit"
+                                class="btn btn-primary btn-lg w-100"
+                                name="default_submit"
+                                {% if not otp_verified %}disabled{% endif %}
+                            >
+                                Next Step
+                                <i class="bi bi-arrow-right ms-2"></i>
+                            </button>
+                        </div>
                     {% endif %}
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                        name="default_submit"
-                        {% if not otp_verified %}
-                            disabled
-                        {% endif %}
-                    >
-                        Next →
-                    </button>
                 </div>
             </form>
+
+            <!-- Help Text -->
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    <i class="bi bi-shield-lock me-1"></i>
+                    Your information is secure and encrypted
+                </small>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Styling Fix -->
+<style>
+    .form-floating > .form-control {
+        height: calc(3.5rem + 2px);
+        padding: 1rem 0.75rem;
+    }
+
+    .form-floating > label {
+        top: 0.6rem;
+        left: 0.75rem;
+        padding: 0;
+        font-size: 0.9rem;
+        opacity: 0.7;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(0.85) translateY(-0.9rem) translateX(0.15rem);
+        opacity: 0.65;
+    }
+
+    .form-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-title {
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #667eea;
+    }
+</style>
 {% endblock %}
