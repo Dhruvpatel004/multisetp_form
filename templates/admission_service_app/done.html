@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Application Submitted{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card text-center p-5 shadow-sm mt-5">
+            <div class="mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="text-success" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2zM7.97 11.03a.75.75 0 0 1-1.06 0L4.47 8.56a.75.75 0 1 1 1.06-1.06L7 8.94l3.47-3.47a.75.75 0 0 1 1.06 1.06L7.97 11.03z"/>
+                </svg>
+            </div>
+            <h3 class="mb-3">Thank You!</h3>
+            <p class="text-muted mb-4">Your admission application has been successfully submitted. We’ve sent a confirmation to your email.</p>
+
+            <a href="{% url 'home' %}" class="btn btn-primary">Go to Homepage</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

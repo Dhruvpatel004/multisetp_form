@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHARUSAT University</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .banner {
+            background-color: #f8f9fa;
+            padding: 60px 0;
+        }
+        .features {
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">CHARUSAT</a>
+        </div>
+    </nav>
+
+    <div class="banner">
+        <div class="container text-center">
+            <h1>Charotar University of Science and Technology</h1>
+            <p class="lead">Empowering Education, Transforming Lives</p>
+            <a href="{% url "admission_apply" %}" class="btn btn-primary btn-lg">Apply for Admission</a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>About CHARUSAT</h3>
+                    <p>CHARUSAT is a premier university located in Changa, Gujarat, offering diverse programs in engineering, management, pharmacy, and more.</p>
+                </div>
+                <div class="col-md-4">
+                    <h3>Programs Offered</h3>
+                    <ul>
+                        <li>Engineering</li>
+                        <li>Management</li>
+                        <li>Pharmacy</li>
+                        <li>Computer Applications</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>Why Choose Us</h3>
+                    <ul>
+                        <li>State-of-the-art facilities</li>
+                        <li>Experienced faculty</li>
+                        <li>Industry partnerships</li>
+                        <li>Excellent placement record</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2023 CHARUSAT University. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
