@@ -28,17 +28,6 @@ class PersonalInfoForm(forms.ModelForm):
             # Hide OTP field if OTP not sent yet
             if "otp" in self.fields:
                 self.fields.pop("otp")
-
-    class Meta:
-        model = AdmissionApplication
-        fields = ["first_name", "last_name", "email", "mobile"]
-        widgets = {
-            "first_name": forms.TextInput(attrs={"placeholder": "First Name"}),
-            "last_name": forms.TextInput(attrs={"placeholder": "Last Name"}),
-            "email": forms.EmailInput(attrs={"placeholder": "Email"}),
-            "mobile": forms.TextInput(attrs={"placeholder": "Phone Number"}),
-        }
-
     class Meta:
         model = AdmissionApplication
         fields = ["first_name", "last_name", "email", "mobile"]
