@@ -1,10 +1,13 @@
-from django.db import models
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
-from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from django.core.validators import (MaxValueValidator, MinValueValidator,
+                                    RegexValidator)
+from django.db import models
+from django.utils.text import slugify
+
 
 class TimeStampedModel(models.Model):
     """Abstract model to add created and updated timestamps."""
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -14,13 +17,14 @@ class TimeStampedModel(models.Model):
 
 class College(TimeStampedModel):
     """Model for colleges."""
+
     name = models.CharField(max_length=150, unique=True)
     slug = models.SlugField(max_length=160, unique=True, blank=True)
     address = models.TextField(blank=True, null=True)
     website = models.URLField(blank=True, null=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
         verbose_name_plural = "Colleges"
 
     def __str__(self):
@@ -34,14 +38,17 @@ class College(TimeStampedModel):
 
 class Department(TimeStampedModel):
     """Departments offered by a college."""
-    college = models.ForeignKey(College, on_delete=models.CASCADE, related_name='departments')
+
+    college = models.ForeignKey(
+        College, on_delete=models.CASCADE, related_name="departments"
+    )
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, blank=True)
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        unique_together = ('college', 'name')
-        ordering = ['college', 'name']
+        unique_together = ("college", "name")
+        ordering = ["college", "name"]
 
     def __str__(self):
         return f"{self.name} ({self.college.name})"
@@ -56,8 +63,8 @@ class AdmissionApplication(TimeStampedModel):
     """Admission Application model with step-wise fields."""
 
     phone_validator = RegexValidator(
-        regex=r'^\+?\d{9,15}$',
-        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+        regex=r"^\+?\d{9,15}$",
+        message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.",
     )
 
     # === Step 1: Personal Info & Contact ===
@@ -71,7 +78,9 @@ class AdmissionApplication(TimeStampedModel):
     is_mobile_verified = models.BooleanField(default=False)
 
     # === Step 2: Select College ===
-    college = models.ForeignKey(College, on_delete=models.PROTECT, related_name='applications')
+    college = models.ForeignKey(
+        College, on_delete=models.PROTECT, related_name="applications"
+    )
 
     # === Step 3: Select Interested Departments (many to many) ===
     interested_departments = models.ManyToManyField(Department, blank=True)
@@ -79,41 +88,59 @@ class AdmissionApplication(TimeStampedModel):
     # === Step 4: Entrance Exam Scores (conditional) ===
     # Engineering department related
     jee_main_score = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(360)]
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(360)],
     )
     math_score = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
 
     # Medical department related
     neet_score = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(720)]
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(720)],
     )
     biology_score = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
 
     # Shared subjects for both streams
     physics_score = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     chemistry_score = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(0), MaxValueValidator(100)]
+        max_digits=5,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
 
     # === Step 5: Status ===
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
     ]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.college.name}"

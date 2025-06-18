@@ -2,76 +2,408 @@
 {% load crispy_forms_tags %}
 
 {% block title %}Step 5 - Review & Confirm{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-10 col-lg-8">
-        <div class="card p-4 shadow-sm">
-            <h4 class="mb-4 text-center">Step 5: Review Your Information</h4>
+        <!-- Step Indicator -->
+        <div class="text-center mb-4">
+            <div class="step-indicator d-inline-flex align-items-center">
+                <i class="bi bi-clipboard-check me-2 text-primary"></i>
+                <small class="text-muted">Step 5 of 5</small>
+            </div>
+        </div>
 
-            <ul class="list-group list-group-flush">
-                <!-- Personal Info -->
-                <li class="list-group-item">
-                    <strong>Full Name:</strong> {{ form_data.first_name }} {{ form_data.last_name }}
-                </li>
-                <li class="list-group-item">
-                    <strong>Email:</strong> {{ form_data.email }}
-                </li>
-                <li class="list-group-item">
-                    <strong>Phone:</strong> {{ form_data.mobile }}
-                </li>
+        <div class="form-card card p-5 shadow-lg">
+            <!-- Progress Bar -->
+            <div class="progress mb-4" style="height: 8px;">
+                <div class="progress-bar" role="progressbar" style="width: 100%"></div>
+            </div>
 
-                <!-- College -->
-                <li class="list-group-item">
-                    <strong>College:</strong> {{ college }}
-                </li>
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <div class="d-inline-flex align-items-center justify-content-center bg-success bg-gradient rounded-circle mb-3" style="width: 60px; height: 60px;">
+                    <i class="bi bi-clipboard-check text-white fs-4"></i>
+                </div>
+                <h4 class="step-title mb-2">Review Your Information</h4>
+                <p class="text-muted">Please review all details before submitting your application</p>
+            </div>
 
-                <!-- Departments -->
-                <li class="list-group-item">
-                    <strong>Interested Departments:</strong>
-                    {% if interested_departments %}
-                        {% for dept in interested_departments %}
-                            {{ dept.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        None selected
-                    {% endif %}
-                </li>
+            <!-- Information Review Cards -->
+            <div class="row g-4 mb-4">
+                <!-- Personal Information Card -->
+                <div class="col-12">
+                    <div class="review-card p-4 border rounded-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-wrapper me-3">
+                                <i class="bi bi-person-circle text-primary fs-4"></i>
+                            </div>
+                            <h5 class="mb-0">Personal Information</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-item mb-3">
+                                    <label class="fw-bold text-muted small">FULL NAME</label>
+                                    <p class="mb-0">{{ form_data.first_name }} {{ form_data.last_name }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item mb-3">
+                                    <label class="fw-bold text-muted small">EMAIL ADDRESS</label>
+                                    <p class="mb-0">{{ form_data.email }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <label class="fw-bold text-muted small">PHONE NUMBER</label>
+                                    <p class="mb-0">{{ form_data.mobile }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Scores -->
-                {% if form_data.jee_main_score %}
-                    <li class="list-group-item"><strong>JEE Main Score:</strong> {{ form_data.jee_main_score }}</li>
-                    <li class="list-group-item"><strong>Math Score:</strong> {{ form_data.math_score }}</li>
-                {% endif %}
-                {% if form_data.neet_score %}
-                    <li class="list-group-item"><strong>NEET Score:</strong> {{ form_data.neet_score }}</li>
-                    <li class="list-group-item"><strong>Biology Score:</strong> {{ form_data.biology_score }}</li>
-                {% endif %}
-                {% if form_data.physics_score %}
-                    <li class="list-group-item"><strong>Physics Score:</strong> {{ form_data.physics_score }}</li>
-                {% endif %}
-                {% if form_data.chemistry_score %}
-                    <li class="list-group-item"><strong>Chemistry Score:</strong> {{ form_data.chemistry_score }}</li>
-                {% endif %}
-            </ul>
+                <!-- College Selection Card -->
+                <div class="col-12">
+                    <div class="review-card p-4 border rounded-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-wrapper me-3">
+                                <i class="bi bi-building text-info fs-4"></i>
+                            </div>
+                            <h5 class="mb-0">College Selection</h5>
+                        </div>
+                        <div class="info-item">
+                            <label class="fw-bold text-muted small">SELECTED COLLEGE</label>
+                            <p class="mb-0">{{ college }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Departments Card -->
+                <div class="col-12">
+                    <div class="review-card p-4 border rounded-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-wrapper me-3">
+                                <i class="bi bi-bookmark-star text-warning fs-4"></i>
+                            </div>
+                            <h5 class="mb-0">Interested Departments</h5>
+                        </div>
+                        <div class="info-item">
+                            <label class="fw-bold text-muted small">SELECTED DEPARTMENTS</label>
+                            {% if interested_departments %}
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    {% for dept in interested_departments %}
+                                        <span class="badge bg-primary bg-gradient px-3 py-2 rounded-pill">
+                                            {{ dept.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="mb-0 text-muted">None selected</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam Scores Card -->
+                <div class="col-12">
+                    <div class="review-card p-4 border rounded-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-wrapper me-3">
+                                <i class="bi bi-clipboard-data text-success fs-4"></i>
+                            </div>
+                            <h5 class="mb-0">Exam Scores</h5>
+                        </div>
+                        <div class="row">
+                            {% if form_data.jee_main_score %}
+                                <div class="col-md-6">
+                                    <div class="score-item p-3 bg-light rounded-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="fw-bold text-muted small">JEE MAIN SCORE</label>
+                                                <p class="mb-0 fs-5 fw-bold">{{ form_data.jee_main_score }}</p>
+                                            </div>
+                                            <i class="bi bi-calculator text-primary fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="score-item p-3 bg-light rounded-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="fw-bold text-muted small">MATH SCORE</label>
+                                                <p class="mb-0 fs-5 fw-bold">{{ form_data.math_score }}</p>
+                                            </div>
+                                            <i class="bi bi-plus-square text-info fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            {% if form_data.neet_score %}
+                                <div class="col-md-6">
+                                    <div class="score-item p-3 bg-light rounded-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="fw-bold text-muted small">NEET SCORE</label>
+                                                <p class="mb-0 fs-5 fw-bold">{{ form_data.neet_score }}</p>
+                                            </div>
+                                            <i class="bi bi-heart-pulse text-danger fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="score-item p-3 bg-light rounded-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="fw-bold text-muted small">BIOLOGY SCORE</label>
+                                                <p class="mb-0 fs-5 fw-bold">{{ form_data.biology_score }}</p>
+                                            </div>
+                                            <i class="bi bi-tree text-success fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            {% if form_data.physics_score %}
+                                <div class="col-md-6">
+                                    <div class="score-item p-3 bg-light rounded-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="fw-bold text-muted small">PHYSICS SCORE</label>
+                                                <p class="mb-0 fs-5 fw-bold">{{ form_data.physics_score }}</p>
+                                            </div>
+                                            <i class="bi bi-lightning text-warning fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            {% if form_data.chemistry_score %}
+                                <div class="col-md-6">
+                                    <div class="score-item p-3 bg-light rounded-3 mb-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <label class="fw-bold text-muted small">CHEMISTRY SCORE</label>
+                                                <p class="mb-0 fs-5 fw-bold">{{ form_data.chemistry_score }}</p>
+                                            </div>
+                                            <i class="bi bi-flask text-info fs-3"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <form method="post" class="mt-4">
                 {% csrf_token %}
                 {{ wizard.management_form }}
 
-                <!-- Confirmation checkbox -->
-    <!-- Render confirmation checkbox using crispy-forms -->
-                {{ form|crispy }}
+                <!-- Confirmation Section -->
+                <div class="confirmation-section p-4 bg-light rounded-4 mb-4">
+                    <div class="form-check d-flex align-items-start">
+                        {{ form.confirmation }}
+                        <label class="form-check-label ms-3" for="{{ form.confirmation.id_for_label }}">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-shield-check text-success me-2 fs-5"></i>
+                                <div>
+                                    <strong>{{ form.confirmation.label }}</strong>
+                                    <p class="text-muted small mb-0 mt-1">
+                                        By checking this box, you confirm that all information provided is accurate and complete. 
+                                        You understand that providing false information may result in rejection of your application.
+                                    </p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    {% if form.confirmation.errors %}
+                        <div class="invalid-feedback d-block mt-2">
+                            <i class="bi bi-exclamation-circle me-1"></i>
+                            {{ form.confirmation.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
 
-                <div class="d-flex justify-content-between mt-4">
-                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" class="btn btn-outline-secondary">
-                        ← Previous
-                    </button>
-                    <button type="submit" class="btn btn-success">
-                        Confirm & Submit
-                    </button>
+                <!-- Final Notice -->
+                <div class="alert alert-info border-0 bg-gradient" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle me-3 fs-5"></i>
+                        <div>
+                            <h6 class="alert-heading mb-2">Before You Submit</h6>
+                            <ul class="mb-0 ps-3">
+                                <li>Double-check all your information above</li>
+                                <li>Ensure your contact details are correct</li>
+                                <li>Confirm your exam scores are accurate</li>
+                                <li>You will receive a confirmation email after submission</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-3">
+                        <button 
+                            name="wizard_goto_step" 
+                            type="submit" 
+                            value="{{ wizard.steps.prev }}" 
+                            class="btn btn-outline-secondary btn-lg w-100"
+                        >
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Previous
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="bi bi-send me-2"></i>
+                            Confirm & Submit
+                        </button>
+                    </div>
                 </div>
             </form>
+
+            <!-- Progress Steps -->
+            <div class="mt-4">
+                <div class="d-flex justify-content-between text-muted small">
+                    <span><i class="bi bi-check-circle-fill text-success"></i> Personal Info</span>
+                    <span><i class="bi bi-check-circle-fill text-success"></i> College</span>
+                    <span><i class="bi bi-check-circle-fill text-success"></i> Departments</span>
+                    <span><i class="bi bi-check-circle-fill text-success"></i> Exam Scores</span>
+                    <span><i class="bi bi-circle-fill text-success"></i> Review</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .review-card {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid rgba(102, 126, 234, 0.1) !important;
+        transition: all 0.3s ease;
+    }
+
+    .review-card:hover {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(102, 126, 234, 0.2) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .icon-wrapper {
+        width: 45px;
+        height: 45px;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .info-item label {
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .info-item p {
+        font-size: 1rem;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .score-item {
+        background: linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(248, 249, 250, 0.7)) !important;
+        border: 1px solid rgba(102, 126, 234, 0.1) !important;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .score-item:hover {
+        background: rgba(248, 249, 250, 0.95) !important;
+        border-color: rgba(102, 126, 234, 0.2) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+    .confirmation-section {
+        background: rgba(248, 249, 250, 0.9);
+        border: 1px solid rgba(102, 126, 234, 0.1);
+        transition: all 0.3s ease;
+    }
+    .confirmation-section:hover {
+        background: rgba(248, 249, 250, 0.95);
+        border-color: rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+    .alert-info {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9)) !important;
+        border: none;
+    }
+    .alert-info .bi {
+        color: #0d6efd;
+    }
+    .alert-info h6 {
+        font-weight: 600;
+    }
+    .alert-info ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+    .alert-info li {
+        margin-bottom: 0.5rem;
+    }
+    .btn {
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .btn:hover::before {
+        opacity: 1;
+    }
+    .btn-success {
+        background: linear-gradient(135deg, #28a745, #218838);
+        color: #fff;
+    }
+    .btn-success:hover {
+        background: linear-gradient(135deg, #218838, #1e7e34);
+        color: #fff;
+    }
+    .btn-outline-secondary {
+        border-color: rgba(108, 117, 125, 0.5);
+        color: #6c757d;
+    }
+    .btn-outline-secondary:hover {
+        background: rgba(108, 117, 125, 0.1);
+        color: #495057;
+    }
+    .step-title {
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+    .step-indicator {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    .step-indicator i {
+        font-size: 1.25rem;
+    }
+</style>
 {% endblock %}
+
+

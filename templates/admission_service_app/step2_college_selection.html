@@ -1,22 +1,138 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}Step 2 - College Selection{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
-        <div class="card p-4 shadow-sm">
-            <h4 class="mb-3 text-center">Step 2: Select College</h4>
+        <!-- Step Indicator -->
+        <div class="text-center mb-4">
+            <div class="step-indicator d-inline-flex align-items-center">
+                <i class="bi bi-building me-2 text-primary"></i>
+                <small class="text-muted">Step 2 of 5</small>
+            </div>
+        </div>
+
+        <div class="form-card card p-5 shadow-lg">
+            <!-- Progress Bar -->
+            <div class="progress mb-4" style="height: 8px;">
+                <div class="progress-bar" role="progressbar" style="width: 40%"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-gradient rounded-circle mb-3" style="width: 60px; height: 60px;">
+                    <i class="bi bi-building text-white fs-4"></i>
+                </div>
+                <h4 class="step-title mb-2">Select Your College</h4>
+                <p class="text-muted">Choose the college you want to apply to</p>
+            </div>
+
             <form method="post">
                 {% csrf_token %}
                 {{ wizard.management_form }}
-                {{ form|crispy }}
 
-                <div class="d-flex justify-content-between mt-4">
-                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" class="btn btn-outline-secondary">← Previous</button>
-                    <button type="submit" class="btn btn-primary">Next →</button>
+                <!-- Enhanced Form Fields -->
+                <div class="mb-4">
+                    {% for field in form %}
+                        <div class="form-floating">
+                            {{ field }}
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                <i class="bi bi-mortarboard me-2"></i>
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+                        </div>
+                        {% if field.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ field.errors.0 }}
+                            </div>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted mt-2 d-block">
+                                <i class="bi bi-info-circle me-1"></i>
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- College Info Card -->
+                <div class="alert alert-light border-0 bg-gradient" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-lightbulb text-warning me-3 fs-5"></i>
+                        <div>
+                            <h6 class="alert-heading mb-2">Quick Tip</h6>
+                            <p class="mb-0">Choose the college that best matches your academic goals and interests. You can find detailed information about each college on our website.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-3">
+                        <button 
+                            name="wizard_goto_step" 
+                            type="submit" 
+                            value="{{ wizard.steps.prev }}" 
+                            class="btn btn-outline-secondary btn-lg w-100"
+                        >
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Previous
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Continue
+                            <i class="bi bi-arrow-right ms-2"></i>
+                        </button>
+                    </div>
                 </div>
             </form>
+
+            <!-- Progress Steps -->
+            <div class="mt-4">
+                <div class="d-flex justify-content-between text-muted small">
+                    <span><i class="bi bi-check-circle-fill text-success"></i> Personal Info</span>
+                    <span><i class="bi bi-circle-fill text-primary"></i> College Selection</span>
+                    <span><i class="bi bi-circle text-muted"></i> Departments</span>
+                    <span><i class="bi bi-circle text-muted"></i> Exam Scores</span>
+                    <span><i class="bi bi-circle text-muted"></i> Review</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .form-floating > .form-select {
+        height: calc(3.5rem + 2px);
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+    }
+
+    .form-floating > .form-select ~ label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1rem 0.75rem;
+        pointer-events: none;
+        border: 1px solid transparent;
+        transform-origin: 0 0;
+        transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
+    }
+
+    .form-floating > .form-select:focus ~ label,
+    .form-floating > .form-select:not([value=""]) ~ label {
+        opacity: 0.65;
+        transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    }
+
+    .alert-light {
+        background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(248,249,250,0.8)) !important;
+    }
+</style>
 {% endblock %}
